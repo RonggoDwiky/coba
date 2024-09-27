@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Model Viewer with OrbitControls</title>
+    <title>3D Model Viewer with Custom Material</title>
     <style>
         body { margin: 0; }
         canvas { display: block; }
@@ -29,7 +29,7 @@
     controls.dampingFactor = 0.05;
     controls.maxPolarAngle = Math.PI; // Limits vertical rotation
     controls.minPolarAngle = 0;
-    controls.autoRotate = false; // If you want auto-rotate, set this to true
+    controls.autoRotate = false; // Set to true for auto rotation
     controls.autoRotateSpeed = 2.0;
 
     // Add lighting
@@ -37,14 +37,26 @@
     light.position.set(0, 1, 1).normalize();
     scene.add(light);
 
-    // Load .obj model
+    // Define custom material for the model
+    const customMaterial = new THREE.MeshPhongMaterial({
+        color: 0x00ff00,   // Warna hijau
+        shininess: 50,     // Seberapa mengkilap material
+        specular: 0x111111 // Efek specular
+    });
+
+    // Load .obj model and apply custom material
     const loader = new THREE.OBJLoader();
     loader.load(
         'KAMAR PROTOTIPE R2.obj', // Ganti dengan path relatif ke file .obj Anda
         function (object) {
+            object.traverse(function (child) {
+                if (child instanceof THREE.Mesh) {
+                    child.material = customMaterial; // Apply custom material to each mesh
+                }
+            });
             scene.add(object);
             object.position.set(0, 0, 0);
-            object.scale.set(0.5, 0.5, 0.5);  // Atur skala model jika perlu
+            object.scale.set(0.5, 0.5, 0.5);  // Adjust scale if necessary
         },
         function (xhr) {
             console.log((xhr.loaded / xhr.total * 100) + '% loaded');
