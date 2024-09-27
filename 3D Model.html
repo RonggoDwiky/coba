@@ -8,7 +8,6 @@
         body { margin: 0; }
         canvas { display: block; }
     </style>
-    <!-- Tambahkan Three.js, OBJLoader, dan OrbitControls dari CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -16,47 +15,42 @@
 <body>
 
 <script>
-    // Setup scene, camera, and renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Add OrbitControls for rotating the camera
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; // Smooth rotation
+    controls.enableDamping = true; 
     controls.dampingFactor = 0.05;
-    controls.maxPolarAngle = Math.PI; // Limits vertical rotation
+    controls.maxPolarAngle = Math.PI; 
     controls.minPolarAngle = 0;
-    controls.autoRotate = false; // Set to true for auto rotation
+    controls.autoRotate = false; 
     controls.autoRotateSpeed = 2.0;
 
-    // Add lighting
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(0, 1, 1).normalize();
     scene.add(light);
 
-    // Define custom material for the model
     const customMaterial = new THREE.MeshPhongMaterial({
-        color: 0x00ff00,   // Warna hijau
-        shininess: 50,     // Seberapa mengkilap material
-        specular: 0x111111 // Efek specular
+        color: 0x00ff00,   
+        shininess: 50,     
+        specular: 0x111111 
     });
 
-    // Load .obj model and apply custom material
     const loader = new THREE.OBJLoader();
     loader.load(
-        'KAMAR PROTOTIPE R2.obj', // Ganti dengan path relatif ke file .obj Anda
+        'KAMAR PROTOTIPE R2.obj', 
         function (object) {
             object.traverse(function (child) {
                 if (child instanceof THREE.Mesh) {
-                    child.material = customMaterial; // Apply custom material to each mesh
+                    child.material = customMaterial; 
                 }
             });
             scene.add(object);
             object.position.set(0, 0, 0);
-            object.scale.set(0.5, 0.5, 0.5);  // Adjust scale if necessary
+            object.scale.set(0.5, 0.5, 0.5);  
         },
         function (xhr) {
             console.log((xhr.loaded / xhr.total * 100) + '% loaded');
@@ -66,18 +60,15 @@
         }
     );
 
-    // Set camera position
-    camera.position.set(5, 5, 5); // Set initial camera position
+    camera.position.set(5, 5, 5); 
 
-    // Animation loop
     function animate() {
         requestAnimationFrame(animate);
-        controls.update(); // Update controls on each frame
+        controls.update(); 
         renderer.render(scene, camera);
     }
     animate();
 
-    // Handle window resizing
     window.addEventListener('resize', function () {
         const width = window.innerWidth;
         const height = window.innerHeight;
